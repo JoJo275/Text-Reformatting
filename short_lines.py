@@ -5,7 +5,7 @@ short_lines.py
 A program that takes two command line arguments: an input file name
 and an output file name. The program reads the input file containing
 short lines (< 30 chars) and outputs text reformatted into lines
-of 30 characters (including spaces and punctuation).
+of any(30) characters (including spaces and punctuation).
 
 Errors handled:
 - Missing arguments
@@ -55,8 +55,9 @@ def read_input_file(filename):
     return content
 
 
-def reformat_text(content, line_length=30):
-    """Reformat text into 30-character lines."""
+def reformat_text(content, line_length=200):
+    """Reformat text into line_length-character lines."""
+    print(content)
     try:
         # Remove extra whitespace and line breaks
         text = " ".join(content.split())
