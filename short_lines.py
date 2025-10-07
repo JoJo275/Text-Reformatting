@@ -1,38 +1,19 @@
-"""short_lines.py
-
-Implement of program that takes two command line arguments: an input file name
-and an output file name.
-The input and output file type can be of any type
-The program reads the input file, which contains multiple short lines of text:
-lines of text shorter than 30 characters including spaces and punctiuation.
-The program then takes that input file and in a new output file specified at
-the command line by the user, outputs lines a text with 30 characters per line
-including spaces and punctuation.
-
-
-The program should print an error message and exit gracefully if:
-
-- If input file is not found
-- if the input file is empty
-- if there was an error reading input file
-- if the program has an error reformatting the input file
-- if the input and output file types are not supported
-- if three arguments are not provided
-
+#!/usr/bin/env python3
 """
+short_lines.py
 
-# !/usr/bin/env python3
+A program that takes two command line arguments: an input file name
+and an output file name. The program reads the input file containing
+short lines (< 30 chars) and outputs text reformatted into lines
+of 30 characters (including spaces and punctuation).
 
-# TODO
-
-# [ ]Implement a program that takes one file and reformats it as another
-# file with text per line at least 30 characters including spaces and
-# punctuation.
-# [ ]Check output file against expected output
-# [ ]Test program with all errors listed in docstring at the beginning of the 
-# document.
-# [ ](NOT SURE)Implement test_short_lines.py to test short_lines.py?
-
+Errors handled:
+- Missing arguments
+- Input file not found
+- Input file empty
+- File read/write errors
+- Unsupported file types
+"""
 
 import sys
 import os
@@ -40,45 +21,68 @@ import os
 ACCEPTED_FILE_FORMATS = (".csv", ".txt", ".docx", ".pdf", ".md", ".json", ".text")
 
 
-def main():
-    """Main function contains the majority of the logic for the program."""
-
-    def get_input_file():
-        """Retrieves input with error checking."""
-        if len(sys.argv) != 3:
-            sys.exit("Usage: python short_lines.py <filename.txt>")
+def validate_args():
+    """Check command-line arguments."""
+    if len(sys.argv) != 3:
+        sys.exit("Usage: python short_lines.py <input_file> <output_file>")
 
     input_filename = sys.argv[1]
     output_filename = sys.argv[2]
 
     if not os.path.isfile(input_filename):
-        sys.exit(f"Input file does not exist: {input_filename}")
+        sys.exit(f"Error: Input file does not exist: {input_filename}")
 
     if not input_filename.endswith(ACCEPTED_FILE_FORMATS) or not output_filename.endswith(ACCEPTED_FILE_FORMATS):
-        sys.exit("Both input and output files must have a valid extension: "
-                 ".csv .txt .docx .pdf .md .json .text")
-        return input_filename, output_filename
+        sys.exit(
+            "Error: Both input and output files must have a valid extension:\n"
+            ".csv .txt .docx .pdf .md .json .text"
+        )
 
-    def open_input_file(input_filename):
-        """Open file with error checking."""
-        try:
-            with open(input_filename, "r", encoding="utf-8") as infile:
-                lines = infile.readlines()
-                rows = list(lines)
-        except Exception as e:
-            sys.exit(f"Error reading {input_filename}: {e}")
-        if not rows:
-            sys.exit(f"Input file is empty: {input_filename}")
-        return rows
+    return input_filename, output_filename
 
-    def reformat_text(rows):
-        """reformat text"""
-        for row in rows:
-            if len(row) < 30:
-                row.append(rows[rows + 1])
+
+def read_input_file(filename):
+    """Read all lines from file."""
+    try:
+        with open(filename, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+    except Exception as e:
+        sys.exit(f"Error reading input file: {e}")
+
+    if not content:
+        sys.exit(f"Error: Input file is empty: {filename}")
+
+    return content
+
+
+def reformat_text(content, line_length=30):
+    """Reformat text into 30-character lines."""
+    try:
+        # Remove extra whitespace and line breaks
+        text = " ".join(content.split())
+        # Break into chunks of 30 chars
+        lines = [text[i:i + line_length] for i in range(0, len(text), line_length)]
+        return "\n".join(lines)
+    except Exception as e:
+        sys.exit(f"Error reformatting text: {e}")
+
+
+def write_output_file(filename, text):
+    """Write reformatted text to output file."""
+    try:
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(text)
+    except Exception as e:
+        sys.exit(f"Error writing output file: {e}")
+
+
+def main():
+    input_filename, output_filename = validate_args()
+    content = read_input_file(input_filename)
+    new_text = reformat_text(content)
+    write_output_file(output_filename, new_text)
+    print(f"Successfully wrote reformatted text to: {output_filename}")
 
 
 if __name__ == "__main__":
     main()
-
-"""short_lines.py"""
