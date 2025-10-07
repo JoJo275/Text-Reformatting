@@ -41,10 +41,12 @@ ACCEPTED_FILE_FORMATS = ".csv .txt .docx .pdf .md .json .text"
 
 
 def main():
+    """Main function contains the majority of the logic for the program."""
 
     def get_input_file():
+        """Retrieves input with error checking."""
         if len(sys.argv) != 3:
-            sys.exit("Usage: python pizza.py <filename.csv>")
+            sys.exit("Usage: python short_lines.py <filename.txt>")
 
     input_filename = sys.argv[1]
     output_filename = sys.argv[2]
@@ -55,8 +57,10 @@ def main():
     if not input_filename.endswith(ACCEPTED_FILE_FORMATS) or not output_filename.endswith(ACCEPTED_FILE_FORMATS):
         sys.exit("Both input and output files must have a valid extension: "
                  ".csv .txt .docx .pdf .md .json .text")
+        return input_filename, output_filename
 
-    def open_input_file():
+    def open_input_file(input_filename):
+        """Open file with error checking."""
         try:
             with open(input_filename, "r", encoding="utf-8") as infile:
                 lines = infile.readlines()
@@ -65,6 +69,15 @@ def main():
             sys.exit(f"Error reading {input_filename}: {e}")
         if not rows:
             sys.exit(f"Input file is empty: {input_filename}")
+        return rows
+
+    def reformat_text(rows):
+        """Reformats text."""
+        character_count = 0
+        for line in rows:
+            for character in line:
+                character_count = character_count + 1
+            if character_count < 30:
 
 
 if __name__ == "__main__":
