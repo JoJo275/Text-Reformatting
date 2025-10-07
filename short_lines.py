@@ -55,9 +55,8 @@ def read_input_file(filename):
     return content
 
 
-def reformat_text(content, line_length=200):
+def reformat_text(content, line_length):
     """Reformat text into line_length-character lines."""
-    print(content)
     try:
         # Remove extra whitespace and line breaks
         text = " ".join(content.split())
@@ -80,7 +79,8 @@ def write_output_file(filename, text):
 def main():
     input_filename, output_filename = validate_args()
     content = read_input_file(input_filename)
-    new_text = reformat_text(content)
+    length = int(input("How many characters per line would you like: "))
+    new_text = reformat_text(content, length)
     write_output_file(output_filename, new_text)
     print(f"Successfully wrote reformatted text to: {output_filename}")
 
