@@ -37,7 +37,7 @@ The program should print an error message and exit gracefully if:
 import sys
 import os
 
-ACCEPTED_FILE_FORMATS = ".csv .txt .docx .pdf .md .json .text"
+ACCEPTED_FILE_FORMATS = (".csv", ".txt", ".docx", ".pdf", ".md", ".json", ".text")
 
 
 def main():
@@ -72,12 +72,10 @@ def main():
         return rows
 
     def reformat_text(rows):
-        """Reformats text."""
-        character_count = 0
-        for line in rows:
-            for character in line:
-                character_count = character_count + 1
-            if character_count < 30:
+        """reformat text"""
+        for row in rows:
+            if len(row) < 30:
+                row.append(rows[rows + 1])
 
 
 if __name__ == "__main__":
