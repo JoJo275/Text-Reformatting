@@ -79,7 +79,12 @@ def write_output_file(filename, text):
 def main():
     input_filename, output_filename = validate_args()
     content = read_input_file(input_filename)
-    length = int(input("How many characters per line would you like: "))
+    while True:
+        try:
+            length = int(input("How many characters per line would you like: "))
+            break  # valid number entered, exit loop
+        except ValueError:
+            print('Please enter a valid number (e.g., 1, 19, 234)')
     new_text = reformat_text(content, length)
     write_output_file(output_filename, new_text)
     print(f"Successfully wrote reformatted text to: {output_filename}")
